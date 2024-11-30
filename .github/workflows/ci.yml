@@ -48,3 +48,6 @@ jobs:
           DB_SOURCE: ${{ secrets.DB_SOURCE }}
           DATABASE_URL: ${{ secrets.DB_SOURCE }}
         run: make migrate-up
+
+      - name: Build
+        run: go mod download && go build -v main.go
