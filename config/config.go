@@ -4,6 +4,7 @@ import (
 	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
 	"log"
+	"time"
 )
 
 type Env struct {
@@ -12,12 +13,16 @@ type Env struct {
 }
 
 type Postgresql struct {
-	DbHost     string `env:"DB_HOST,required"`
-	DbPort     string `env:"DB_PORT,required"`
-	DbUser     string `env:"DB_USER,required"`
-	DbPassword string `env:"DB_PASSWORD,required"`
-	DbName     string `env:"DB_NAME,required"`
-	DbSslMode  string `env:"DB_SSLMODE,required"`
+	DbHost       string        `env:"DB_HOST,required"`
+	DbPort       string        `env:"DB_PORT,required"`
+	DbUser       string        `env:"DB_USER,required"`
+	DbPassword   string        `env:"DB_PASSWORD,required"`
+	DbName       string        `env:"DB_NAME,required"`
+	DbSslMode    string        `env:"DB_SSLMODE,required"`
+	MaxOpenConns int           `env:"MAX_OPEN_CONNECTIONS,required"`
+	MaxIdleConns int           `env:"MAX_IDLE_CONNECTIONS,required"`
+	MaxIdleTime  time.Duration `env:"MAX_IDLE_TIME,required"`
+	Timeout      time.Duration `env:"TIMEOUT,required"`
 }
 
 type Server struct {
