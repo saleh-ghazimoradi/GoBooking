@@ -21,10 +21,12 @@ func registerRoutes() *httprouter.Router {
 	eventHandler := NewEventHandler(eventService)
 
 	router := httprouter.New()
-
-	router.HandlerFunc(http.MethodGet, "/v1/", eventHandler.getOneHandler)
-	router.HandlerFunc(http.MethodGet, "/v1/", eventHandler.getManyHandler)
-	router.HandlerFunc(http.MethodPost, "/v1/", eventHandler.createEventHandler)
+	router.NotFound = http.HandlerFunc(notFoundRouter)
+	router.MethodNotAllowed = http.HandlerFunc(methodNotAllowedResponse)
+	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", healthCheckHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/events/:id", eventHandler.getOneHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/events", eventHandler.getManyHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/events", eventHandler.createEventHandler)
 
 	return router
 }

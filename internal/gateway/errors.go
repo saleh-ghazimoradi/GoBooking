@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"fmt"
 	"github.com/saleh-ghazimoradi/GoBooking/logger"
 	"net/http"
 )
@@ -18,6 +19,16 @@ func badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
 func notFoundResponse(w http.ResponseWriter, r *http.Request, err error) {
 	logger.Logger.Warn("not found", "method", r.Method, "path", r.URL.Path, "err", err.Error())
 	writeJSONError(w, http.StatusNotFound, "not found")
+}
+
+func notFoundRouter(w http.ResponseWriter, r *http.Request) {
+	message := "the requested resource could not be found"
+	writeJSONError(w, http.StatusNotFound, message)
+}
+
+func methodNotAllowedResponse(w http.ResponseWriter, r *http.Request) {
+	message := fmt.Sprintf("the %s method is not supported for this resource", r.Method)
+	writeJSONError(w, http.StatusMethodNotAllowed, message)
 }
 
 func conflictResponse(w http.ResponseWriter, r *http.Request, err error) {
