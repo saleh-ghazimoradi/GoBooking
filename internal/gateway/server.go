@@ -16,7 +16,8 @@ import (
 
 var wg sync.WaitGroup
 
-func Server(router http.Handler) error {
+func Server() error {
+	router := registerRoutes()
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", config.Appconfig.Server.Port),
 		Handler:      router,
