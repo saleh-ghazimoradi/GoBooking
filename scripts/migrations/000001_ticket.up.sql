@@ -6,3 +6,5 @@ CREATE TABLE IF NOT EXISTS events (
     created_at TIMESTAMP(0) with time zone NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP(0) with time zone NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE events ADD COLUMN version INT DEFAULT 0;
