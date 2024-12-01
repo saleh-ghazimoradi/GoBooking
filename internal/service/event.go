@@ -11,6 +11,8 @@ type Event interface {
 	GetMany(ctx context.Context) ([]*service_models.Event, error)
 	GetOne(ctx context.Context, id int64) (*service_models.Event, error)
 	CreateOne(ctx context.Context, event *service_models.Event) error
+	UpdateOne(ctx context.Context, event *service_models.Event) error
+	DeleteOne(ctx context.Context, id int64) error
 	GetWithTXT(tx *sql.Tx) Event
 }
 
@@ -28,6 +30,14 @@ func (e *eventService) GetOne(ctx context.Context, id int64) (*service_models.Ev
 
 func (e *eventService) CreateOne(ctx context.Context, event *service_models.Event) error {
 	return e.eventRepo.CreateOne(ctx, event)
+}
+
+func (e *eventService) UpdateOne(ctx context.Context, event *service_models.Event) error {
+	return e.eventRepo.UpdateOne(ctx, event)
+}
+
+func (e *eventService) DeleteOne(ctx context.Context, id int64) error {
+	return e.eventRepo.DeleteOne(ctx, id)
 }
 
 func (e *eventService) GetWithTXT(tx *sql.Tx) Event {
