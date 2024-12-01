@@ -19,15 +19,15 @@ type eventService struct {
 }
 
 func (e *eventService) GetMany(ctx context.Context) ([]*service_models.Event, error) {
-	return nil, nil
+	return e.eventRepo.GetMany(ctx)
 }
 
 func (e *eventService) GetOne(ctx context.Context, id int64) (*service_models.Event, error) {
-	return nil, nil
+	return e.eventRepo.GetOne(ctx, id)
 }
 
 func (e *eventService) CreateOne(ctx context.Context, event *service_models.Event) error {
-	return nil
+	return e.eventRepo.CreateOne(ctx, event)
 }
 
 func (e *eventService) GetWithTXT(tx *sql.Tx) Event {
