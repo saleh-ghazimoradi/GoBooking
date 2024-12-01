@@ -1,24 +1,38 @@
 package cmd
 
 import (
+	"github.com/saleh-ghazimoradi/GoBooking/config"
+	"github.com/saleh-ghazimoradi/GoBooking/logger"
 	"github.com/spf13/cobra"
 	"os"
+	"time"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "GoBooking",
-	Short: "A brief description of your application",
-	Long:  `A longer description that spans multiple lines and likely contains`,
+	Short: "A Ticket Booker application",
 }
 
 func Execute() {
-	err := rootCmd.Execute()
+	err := os.Setenv("TZ", time.UTC.String())
+	if err != nil {
+		panic(err)
+	}
+
+	err = rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
 func init() {
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	cobra.OnInitialize(initConfig)
+}
+
+func initConfig() {
+	err := config.EnvConfig()
+	if err != nil {
+		logger.Logger.Error("there went something wrong while loading config file")
+	}
 }
