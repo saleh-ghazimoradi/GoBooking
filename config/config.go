@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var Appconfig *Env
+
 type Env struct {
 	Server     Server
 	Postgresql Postgresql
