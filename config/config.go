@@ -21,14 +21,18 @@ type Postgresql struct {
 	DbPassword   string        `env:"DB_PASSWORD,required"`
 	DbName       string        `env:"DB_NAME,required"`
 	DbSslMode    string        `env:"DB_SSLMODE,required"`
-	MaxOpenConns int           `env:"MAX_OPEN_CONNECTIONS,required"`
-	MaxIdleConns int           `env:"MAX_IDLE_CONNECTIONS,required"`
-	MaxIdleTime  time.Duration `env:"MAX_IDLE_TIME,required"`
-	Timeout      time.Duration `env:"TIMEOUT,required"`
+	MaxOpenConns int           `env:"DB_MAX_OPEN_CONNECTIONS,required"`
+	MaxIdleConns int           `env:"DB_MAX_IDLE_CONNECTIONS,required"`
+	MaxIdleTime  time.Duration `env:"DB_MAX_IDLE_TIME,required"`
+	Timeout      time.Duration `env:"DB_TIMEOUT,required"`
 }
 
 type Server struct {
-	Port string `env:"SERVER_PORT"`
+	Port         string        `env:"SERVER_PORT,required"`
+	Version      string        `env:"SERVER_VERSION,required"`
+	IdleTimeout  time.Duration `env:"SERVER_IDLE_TIMEOUT,required"`
+	ReadTimeout  time.Duration `env:"SERVER_READ_TIMEOUT,required"`
+	WriteTimeout time.Duration `env:"SERVER_WRITE_TIMEOUT,required"`
 }
 
 func EnvConfig() *Env {
