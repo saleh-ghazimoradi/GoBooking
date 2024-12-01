@@ -35,7 +35,7 @@ type Server struct {
 	WriteTimeout time.Duration `env:"SERVER_WRITE_TIMEOUT,required"`
 }
 
-func EnvConfig() *Env {
+func EnvConfig() error {
 	if err := godotenv.Load("app.env"); err != nil {
 		log.Fatalf("Unable to load app.env file: %e", err)
 	}
@@ -62,5 +62,7 @@ func EnvConfig() *Env {
 
 	envConfig.Server = *serverConfig
 
-	return envConfig
+	Appconfig = envConfig
+
+	return nil
 }

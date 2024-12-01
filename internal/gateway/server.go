@@ -3,7 +3,6 @@ package gateway
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/saleh-ghazimoradi/GoBooking/config"
 	"github.com/saleh-ghazimoradi/GoBooking/logger"
 	"net/http"
@@ -19,7 +18,7 @@ var wg sync.WaitGroup
 func Server() error {
 	router := registerRoutes()
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", config.Appconfig.Server.Port),
+		Addr:         config.Appconfig.Server.Port,
 		Handler:      router,
 		IdleTimeout:  config.Appconfig.Server.IdleTimeout,
 		ReadTimeout:  config.Appconfig.Server.ReadTimeout,
@@ -49,7 +48,7 @@ func Server() error {
 		shutdownError <- nil
 	}()
 
-	logger.Logger.Info("starting server", "addr", srv.Addr, "env", config.Appconfig.Server.Version)
+	logger.Logger.Info("starting server", "addr", config.Appconfig.Server.Port, "env", config.Appconfig.Server.Version)
 
 	err := srv.ListenAndServe()
 	if !errors.Is(err, http.ErrServerClosed) {
