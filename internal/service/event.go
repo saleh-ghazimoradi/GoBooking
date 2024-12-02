@@ -8,7 +8,7 @@ import (
 )
 
 type Event interface {
-	GetMany(ctx context.Context) ([]*service_models.Event, error)
+	GetMany(ctx context.Context, fq service_models.PaginationFeedQuery) ([]service_models.Event, error)
 	GetOne(ctx context.Context, id int64) (*service_models.Event, error)
 	CreateOne(ctx context.Context, event *service_models.Event) error
 	UpdateOne(ctx context.Context, event *service_models.Event) error
@@ -20,8 +20,8 @@ type eventService struct {
 	eventRepo repository.Event
 }
 
-func (e *eventService) GetMany(ctx context.Context) ([]*service_models.Event, error) {
-	return e.eventRepo.GetMany(ctx)
+func (e *eventService) GetMany(ctx context.Context, fq service_models.PaginationFeedQuery) ([]service_models.Event, error) {
+	return e.eventRepo.GetMany(ctx, fq)
 }
 
 func (e *eventService) GetOne(ctx context.Context, id int64) (*service_models.Event, error) {

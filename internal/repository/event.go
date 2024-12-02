@@ -8,7 +8,7 @@ import (
 )
 
 type Event interface {
-	GetMany(ctx context.Context) ([]*service_models.Event, error)
+	GetMany(ctx context.Context, fq service_models.PaginationFeedQuery) ([]service_models.Event, error)
 	GetOne(ctx context.Context, id int64) (*service_models.Event, error)
 	CreateOne(ctx context.Context, event *service_models.Event) error
 	UpdateOne(ctx context.Context, event *service_models.Event) error
@@ -22,8 +22,33 @@ type eventRepo struct {
 	tx      *sql.Tx
 }
 
-func (e *eventRepo) GetMany(ctx context.Context) ([]*service_models.Event, error) {
-	return nil, nil
+func (e *eventRepo) GetMany(ctx context.Context, fq service_models.PaginationFeedQuery) ([]service_models.Event, error) {
+	query := `SELECT id, name, location, date, created_at, updated_at, version FROM events ORDER BY id ` + fq.Sort + ` LIMIT $1 OFFSET $2`
+
+	rows, err := e.dbRead.QueryContext(ctx, query, fq.Limit, fq.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var events []service_models.Event
+	for rows.Next() {
+		var event service_models.Event
+		err = rows.Scan(
+			&event.ID,
+			&event.Name,
+			&event.Location,
+			&event.Date,
+			&event.CreatedAt,
+			&event.UpdatedAt,
+			&event.Version,
+		)
+		if err != nil {
+			return nil, err
+		}
+		events = append(events, event)
+	}
+	return events, nil
 }
 
 func (e *eventRepo) GetOne(ctx context.Context, id int64) (*service_models.Event, error) {

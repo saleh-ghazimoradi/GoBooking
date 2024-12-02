@@ -15,10 +15,27 @@ type event struct {
 }
 
 func (e *event) getManyEvents(w http.ResponseWriter, r *http.Request) {
+	p := service_models.PaginationFeedQuery{
+		Limit:  20,
+		Offset: 0,
+		Sort:   "desc",
+	}
+
+	fq, err := p.Parse(r)
+	if err != nil {
+		badRequestResponse(w, r, err)
+		return
+	}
+
+	if err = Validate.Struct(fq); err != nil {
+		badRequestResponse(w, r, err)
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	evs, err := e.eventService.GetMany(ctx)
+	evs, err := e.eventService.GetMany(ctx, fq)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
