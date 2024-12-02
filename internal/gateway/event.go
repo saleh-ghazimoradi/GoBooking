@@ -157,14 +157,16 @@ func (e *event) deleteEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = e.eventService.DeleteOne(ctx, id); err != nil {
-		internalServerError(w, r, err)
+		switch {
+		case errors.Is(err, repository.ErrRecordNotFound):
+			notFoundResponse(w, r, err)
+		default:
+			internalServerError(w, r, err)
+		}
 		return
 	}
 
-	if err = jsonResponse(w, http.StatusOK, nil); err != nil {
-		internalServerError(w, r, err)
-		return
-	}
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func NewEventHandler(eventService service.Event) *event {
