@@ -66,6 +66,19 @@ func (e *eventRepo) UpdateOne(ctx context.Context, event *service_models.Event) 
 }
 
 func (e *eventRepo) DeleteOne(ctx context.Context, id int64) error {
+	query := `DELETE FROM events WHERE id = $1`
+
+	result, err := e.dbWrite.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return ErrRecordNotFound
+	}
 	return nil
 }
 
