@@ -32,6 +32,10 @@ func registerRoutes() *httprouter.Router {
 	eventService := service.NewEventService(eventRepository)
 	eventHandler := NewEventHandler(eventService)
 
+	ticketRepository := repository.NewTicketRepository(db, db)
+	ticketService := service.NewTicketService(ticketRepository)
+	ticketHandler := NewTicketHandler(ticketService)
+
 	router := httprouter.New()
 
 	router.NotFound = http.HandlerFunc(notFoundRouter)
@@ -42,7 +46,12 @@ func registerRoutes() *httprouter.Router {
 	router.HandlerFunc(http.MethodPost, "/v1/events", eventHandler.createEvent)
 	router.HandlerFunc(http.MethodDelete, "/v1/events/:id", eventHandler.deleteEvent)
 	router.HandlerFunc(http.MethodPut, "/v1/events/:id", eventHandler.updateEvent)
-
+	router.HandlerFunc(http.MethodGet, "/v1/tickets", ticketHandler.getManyTickets)
+	router.HandlerFunc(http.MethodGet, "/v1/tickets/:id", ticketHandler.getOneTicket)
+	router.HandlerFunc(http.MethodPost, "/v1/tickets", ticketHandler.createOneTicket)
+	router.HandlerFunc(http.MethodPost, "/v1/tickets/validate", ticketHandler.validateTicket)
+	router.HandlerFunc(http.MethodPut, "/v1/tickets/:id", ticketHandler.updateOneTicket)
+	router.HandlerFunc(http.MethodDelete, "/v1/tickets/:id", ticketHandler.deleteOneTicket)
 	swaggerHandler := SetupSwagger()
 	router.Handler(http.MethodGet, "/swagger/*any", swaggerHandler)
 
