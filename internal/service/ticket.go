@@ -8,7 +8,7 @@ import (
 )
 
 type Ticket interface {
-	GetMany(ctx context.Context) ([]*service_models.Ticket, error)
+	GetMany(ctx context.Context, fq service_models.PaginationFeedQuery) ([]service_models.Ticket, error)
 	GetOne(ctx context.Context, id int64) (*service_models.Ticket, error)
 	CreateOne(ctx context.Context, ticket *service_models.Ticket) error
 	UpdateOne(ctx context.Context, ticket *service_models.Ticket) error
@@ -20,8 +20,8 @@ type ticketService struct {
 	ticketRepo repository.Ticket
 }
 
-func (s *ticketService) GetMany(ctx context.Context) ([]*service_models.Ticket, error) {
-	return s.ticketRepo.GetMany(ctx)
+func (s *ticketService) GetMany(ctx context.Context, fq service_models.PaginationFeedQuery) ([]service_models.Ticket, error) {
+	return s.ticketRepo.GetMany(ctx, fq)
 }
 
 func (s *ticketService) GetOne(ctx context.Context, id int64) (*service_models.Ticket, error) {
