@@ -14,6 +14,21 @@ type event struct {
 	eventService service.Event
 }
 
+// @Summary Get Many Events
+// @Description Retrieves a list of events with pagination, sorting, and filtering.
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param limit query int false "Number of events to retrieve (default: 20)"
+// @Param offset query int false "Offset for pagination (default: 0)"
+// @Param sort query string false "Sort order, 'asc' or 'desc' (default: desc)"
+// @Param search query string false "Search term for filtering events"
+// @Param since query string false "Start date filter in RFC3339 format"
+// @Param until query string false "End date filter in RFC3339 format"
+// @Success 200 {array} service_models.Event "List of events"
+// @Failure 400 {object} map[string]string "Validation error"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /v1/events [get]
 func (e *event) getManyEvents(w http.ResponseWriter, r *http.Request) {
 	p := service_models.PaginationFeedQuery{
 		Limit:  20,
@@ -48,6 +63,16 @@ func (e *event) getManyEvents(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// @Summary Get One Event
+// @Description Retrieves details of a specific event by ID.
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param id path int true "Event ID"
+// @Success 200 {object} service_models.Event "Event details"
+// @Failure 404 {object} map[string]string "Event not found"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /v1/events/{id} [get]
 func (e *event) getOneEvent(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -76,6 +101,16 @@ func (e *event) getOneEvent(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// @Summary Create an Event
+// @Description Creates a new event with the given details.
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param event body service_models.EventPayload true "Event payload"
+// @Success 201 {object} service_models.Event "Created event details"
+// @Failure 400 {object} map[string]string "Validation error"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /v1/events [post]
 func (e *event) createEvent(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -108,6 +143,19 @@ func (e *event) createEvent(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// @Summary Update an Event
+// @Description Updates an existing event by ID.
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param id path int true "Event ID"
+// @Param event body service_models.UpdateEventPayload true "Updated event payload"
+// @Success 200 {object} service_models.Event "Updated event details"
+// @Failure 400 {object} map[string]string "Validation error"
+// @Failure 404 {object} map[string]string "Event not found"
+// @Failure 409 {object} map[string]string "Edit conflict"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /v1/events/{id} [put]
 func (e *event) updateEvent(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -164,6 +212,16 @@ func (e *event) updateEvent(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// @Summary Delete an Event
+// @Description Deletes an existing event by ID.
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param id path int true "Event ID"
+// @Success 204 "No Content"
+// @Failure 404 {object} map[string]string "Event not found"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /v1/events/{id} [delete]
 func (e *event) deleteEvent(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

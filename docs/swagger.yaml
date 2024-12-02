@@ -1,0 +1,277 @@
+basePath: /
+definitions:
+  service_models.Event:
+    properties:
+      created_at:
+        type: string
+      date:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+      version:
+        type: integer
+    type: object
+  service_models.EventPayload:
+    properties:
+      location:
+        type: string
+      name:
+        type: string
+    required:
+    - location
+    - name
+    type: object
+  service_models.UpdateEventPayload:
+    properties:
+      location:
+        maxLength: 35
+        type: string
+      name:
+        maxLength: 35
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is a web API server.
+  title: GoBooking API
+  version: "1.0"
+paths:
+  /v1/events:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of events with pagination, sorting, and filtering.
+      parameters:
+      - description: 'Number of events to retrieve (default: 20)'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Offset for pagination (default: 0)'
+        in: query
+        name: offset
+        type: integer
+      - description: 'Sort order, ''asc'' or ''desc'' (default: desc)'
+        in: query
+        name: sort
+        type: string
+      - description: Search term for filtering events
+        in: query
+        name: search
+        type: string
+      - description: Start date filter in RFC3339 format
+        in: query
+        name: since
+        type: string
+      - description: End date filter in RFC3339 format
+        in: query
+        name: until
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of events
+          schema:
+            items:
+              $ref: '#/definitions/service_models.Event'
+            type: array
+        "400":
+          description: Validation error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Many Events
+      tags:
+      - events
+    post:
+      consumes:
+      - application/json
+      description: Creates a new event with the given details.
+      parameters:
+      - description: Event payload
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/service_models.EventPayload'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created event details
+          schema:
+            $ref: '#/definitions/service_models.Event'
+        "400":
+          description: Validation error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create an Event
+      tags:
+      - events
+  /v1/events/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an existing event by ID.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Event not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete an Event
+      tags:
+      - events
+    get:
+      consumes:
+      - application/json
+      description: Retrieves details of a specific event by ID.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event details
+          schema:
+            $ref: '#/definitions/service_models.Event'
+        "404":
+          description: Event not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get One Event
+      tags:
+      - events
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing event by ID.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated event payload
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/service_models.UpdateEventPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated event details
+          schema:
+            $ref: '#/definitions/service_models.Event'
+        "400":
+          description: Validation error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Event not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Edit conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update an Event
+      tags:
+      - events
+  /v1/healthcheck:
+    get:
+      consumes:
+      - application/json
+      description: Returns the health status, environment, and version of the application,
+        along with failure details if needed
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Health Check
+      tags:
+      - Health
+schemes:
+- http
+- https
+securityDefinitions:
+  AuthBearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
