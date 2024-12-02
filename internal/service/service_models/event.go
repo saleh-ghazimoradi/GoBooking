@@ -18,6 +18,6 @@ type EventPayload struct {
 }
 
 type UpdateEventPayload struct {
-	Name     *string `json:"name" validate:"required"`
-	Location *string `json:"location" validate:"required"`
+	Name     *string `json:"name" validate:"omitempty,max=35"`
+	Location *string `json:"location" validate:"omitempty,max=35"`
 }

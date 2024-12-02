@@ -62,6 +62,23 @@ func (e *eventRepo) CreateOne(ctx context.Context, event *service_models.Event) 
 }
 
 func (e *eventRepo) UpdateOne(ctx context.Context, event *service_models.Event) error {
+	query := `UPDATE events SET name = $1, location = $2, version = version + 1 WHERE id = $3 AND version = $4 RETURNING version`
+
+	args := []any{
+		event.Name,
+		event.Location,
+		event.ID,
+		event.Version,
+	}
+
+	if err := e.dbWrite.QueryRowContext(ctx, query, args...).Scan(&event.Version); err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return ErrEditConflict
+		default:
+			return err
+		}
+	}
 	return nil
 }
 
